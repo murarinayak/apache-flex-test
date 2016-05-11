@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+	<path>http://localhost:81/mcc/services/v1/</path>
+</service>
