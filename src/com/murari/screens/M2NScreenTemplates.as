@@ -1,6 +1,7 @@
 package com.murari.screens
 {
 	import com.murari.interfaces.IM2NScreen;
+	import com.murari.service.M2NServiceManager;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Screen;
@@ -35,12 +36,36 @@ package com.murari.screens
 		
 		private function _loadData():void
 		{
+			M2NServiceManager.addEventListener(Event.COMPLETE, _onServiceExecutionComplete);
+			M2NServiceManager.addEventListener(Event.IO_ERROR, _onError);
+			M2NServiceManager.executeService(M2NServiceManager.SERVICE_TEMPLATE);//, new Object());
+		}
+		
+		private function _onServiceExecutionComplete(event:Event = null):void
+		{
+			/// Remove the listener
+			M2NServiceManager.removeEventListener(Event.COMPLETE, _onServiceExecutionComplete);
+			M2NServiceManager.removeEventListener(Event.IO_ERROR, _onError);
 			
+			trace (event.data);
+		}
+		
+		private function _onError(error:Event):void
+		{
+			/// Remove the listener
+			M2NServiceManager.removeEventListener(Event.COMPLETE, _onServiceExecutionComplete);
+			M2NServiceManager.removeEventListener(Event.IO_ERROR, _onError);
+			
+			//M2NActionsTracer.showErrorAlert(new M2NError("Failure", error.data.toString()));
+			//M2NCommonFunctions.hideMessage();
+			
+			trace(error.data);
 		}
 		
 		private function _onButtonTriggered(event:Event):void
 		{
 			trace ("Button Triggered");
+			_loadData();
 		}
 	}
 }
